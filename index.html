@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOBO STORE - Tienda de Moda</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="text-white">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <img src="assets/Logo.png" alt="LOBO STORE Logo" class="wolf-logo">
+                </div>
+                <div>
+                    <h1 class="font-display text-2xl font-bold text-white tracking-wider">LOBO STORE</h1>
+                    <p class="text-xs text-gray-400">Estilo Urbano & Audaz</p>
+                </div>
+            </div>
+            
+            <!-- Botones Header -->
+            <div class="flex items-center gap-3">
+                <button onclick="openCart()" class="relative p-2 hover:bg-white/10 rounded-full transition-colors">
+                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 rounded-full text-xs flex items-center justify-center font-bold hidden">0</span>
+                </button>
+                <button onclick="openAddProduct()" class="btn-primary px-5 py-2 rounded-full font-bold text-sm">
+                    + AGREGAR
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 text-9xl animate-pulse">🐺</div>
+            <div class="absolute bottom-20 right-20 text-8xl animate-pulse" style="animation-delay: 1s">🔥</div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto relative z-10">
+            <h2 class="font-display text-5xl md:text-7xl font-bold mb-4 fade-in">
+                <span class="text-white">BIENVENIDO A</span><br>
+                <span class="text-red-500 text-6xl md:text-8xl">LOBO STORE</span>
+            </h2>
+            <p class="text-gray-300 text-lg md:text-xl mb-8 fade-in font-medium" style="animation-delay: 0.2s">
+                Desata tu estilo. Vestimenta y calzado de actitud.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 fade-in" style="animation-delay: 0.4s">
+                <a href="#productos" class="btn-primary px-8 py-3 rounded-full text-white font-bold">
+                    VER CATÁLOGO
+                </a>
+                <a href="https://wa.me/5492235023826" target="_blank" class="btn-secondary px-8 py-3 rounded-full font-bold">
+                    CONTACTAR
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTOS SECTION -->
+    <section id="productos" class="px-4 py-8">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Filtros de Categoría -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button onclick="filterCategory('all')" class="chip active" data-category="all">
+                    ✨ TODOS
+                </button>
+                <button onclick="filterCategory('ropa')" class="chip" data-category="ropa">
+                    👕 ROPA
+                </button>
+                <button onclick="filterCategory('calzado')" class="chip" data-category="calzado">
+                    👟 CALZADO
+                </button>
+                <button onclick="filterCategory('accesorios')" class="chip" data-category="accesorios">
+                    👜 ACCESORIOS
+                </button>
+                <button onclick="filterCategory('ropaInterior')" class="chip" data-category="ropaInterior">
+                    👙 ROPA INTERIOR
+                </button>
+            </div>
+
+            <!-- Buscador -->
+            <div class="max-w-md mx-auto mb-8 relative">
+                <input type="text" id="search-input" placeholder="Buscar productos..." 
+                    class="w-full px-5 py-3 pl-12 rounded-full input-field text-white" 
+                    oninput="searchProducts(this.value)">
+                <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+
+            <!-- Grid de Productos -->
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+            <!-- Estado Vacío -->
+            <div id="empty-state" class="text-center py-16 hidden">
+                <div class="text-8xl mb-4">🐺</div>
+                <h3 class="font-display text-3xl text-red-500 mb-2">¡AGREGA TUS PRODUCTOS!</h3>
+                <p class="text-gray-400 mb-6">Tu catálogo está esperando. Comienza a cargar tu inventario.</p>
+                 <button onclick="openAddProduct()" class="btn-primary px-8 py-3 rounded-full font-bold">
+                    + AGREGAR PRIMER PRODUCTO
+                </button> 
+            </div>
+
+            <!-- Sin Resultados -->
+            <div id="no-results" class="text-center py-16 hidden">
+                <div class="text-8xl mb-4">🔍</div>
+                <h3 class="font-display text-2xl text-red-500 mb-2">NO HAY RESULTADOS</h3>
+                <p class="text-gray-400">Intenta con otra búsqueda o categoría</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="glass mt-16 py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-gray-400 text-sm font-medium">© 2024 LOBO STORE. Todos los derechos reservados.</p>
+            <p class="text-gray-500 text-xs mt-2">Estilo que marca territorio 🐺</p>
+        </div>
+    </footer>
+
+    <!-- MODAL AGREGAR/EDITAR PRODUCTO -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay" onclick="closeProductModal()"></div>
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="modal-title" class="font-display text-2xl text-red-500">AGREGAR PRODUCTO</h3>
+                    <button onclick="closeProductModal()" class="text-gray-400 hover:text-white text-3xl leading-none">
+                        ×
+                    </button>
+                </div>
+
+                <form id="product-form" onsubmit="handleProductSubmit(event)">
+                    <input type="hidden" id="product-id">
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-300 mb-2 font-medium">Nombre del Producto *</label>
+                        <input type="text" id="product-name" required 
+                            class="w-full px-4 py-3 rounded-lg input-field text-white" 
+                            placeholder="Ej: Campera Urbana">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm text-gray-300 mb-2 font-medium">Precio *</label>
+                            <input type="number" id="product-price" required min="0" step="0.01" 
+                                class="w-full px-4 py-3 rounded-lg input-field text-white" 
+                                placeholder="15000">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-300 mb-2 font-medium">Categoría *</label>
+                            <select id="product-category" required 
+                                class="w-full px-4 py-3 rounded-lg input-field text-white bg-transparent">
+                                <option value="ropa">👕 Ropa</option>
+                                <option value="calzado">👟 Calzado</option>
+                                <option value="accesorios">👜 Accesorios</option>
+                                <option value="ropaInterior">👙 Ropa Interior</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-300 mb-2 font-medium">Imagen del Producto</label>
+                        <div class="flex gap-3 mb-3">
+                            <input type="file" id="product-image" accept="image/*" 
+                                class="flex-1 px-4 py-3 rounded-lg input-field text-white text-sm"
+                                onchange="previewImage(event)">
+                            <button type="button" onclick="clearImage()" 
+                                class="px-4 py-3 rounded-lg bg-red-600/30 text-red-400 font-bold hover:bg-red-600/50 transition-colors">
+                                LIMPIAR
+                            </button>
+                        </div>
+                        <div id="image-preview" class="w-full h-40 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                            <span class="text-gray-500 text-sm">Sin imagen</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-300 mb-2 font-medium">O usa un Emoji</label>
+                        <div class="grid grid-cols-8 gap-2 mb-2">
+                            <button type="button" onclick="selectEmoji('👙')" class="emoji-btn">👙</button>
+                            <button type="button" onclick="selectEmoji('👔')" class="emoji-btn">👔</button>
+                            <button type="button" onclick="selectEmoji('👕')" class="emoji-btn">👕</button>
+                            <button type="button" onclick="selectEmoji('👖')" class="emoji-btn">👖</button>
+                            <button type="button" onclick="selectEmoji('👠')" class="emoji-btn">👠</button>
+                            <button type="button" onclick="selectEmoji('👟')" class="emoji-btn">👟</button>
+                            <button type="button" onclick="selectEmoji('👜')" class="emoji-btn">👜</button>
+                            <button type="button" onclick="selectEmoji('🧥')" class="emoji-btn">🧥</button>
+                            <button type="button" onclick="selectEmoji('🩲')" class="emoji-btn">🩲</button>
+                        </div>
+                        <input type="text" id="product-emoji" 
+                            class="w-full px-4 py-3 rounded-lg input-field text-white text-center text-3xl" 
+                            value="👗" readonly>
+                        <input type="hidden" id="product-image-data">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm text-gray-300 mb-2 font-medium">Talles</label>
+                            <input type="text" id="product-size" 
+                                class="w-full px-4 py-3 rounded-lg input-field text-white" 
+                                placeholder="S, M, L, XL">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-300 mb-2 font-medium">Stock</label>
+                            <input type="number" id="product-stock" min="0" 
+                                class="w-full px-4 py-3 rounded-lg input-field text-white" 
+                                placeholder="10">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm text-gray-300 mb-2 font-medium">Descripción</label>
+                        <textarea id="product-description" rows="3" 
+                            class="w-full px-4 py-3 rounded-lg input-field text-white resize-none" 
+                            placeholder="Describe tu producto..."></textarea>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button type="button" onclick="closeProductModal()" 
+                            class="flex-1 py-3 rounded-full border border-gray-500 text-gray-300 font-bold hover:bg-white/10 transition-colors">
+                            CANCELAR
+                        </button>
+                        <button type="submit" 
+                            class="flex-1 btn-primary py-3 rounded-full font-bold">
+                            GUARDAR
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CARRITO -->
+    <div id="cart-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay" onclick="closeCart()"></div>
+        <div class="modal-content-right">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-display text-2xl text-red-500">TU CARRITO 🛒</h3>
+                    <button onclick="closeCart()" class="text-gray-400 hover:text-white text-3xl leading-none">
+                        ×
+                    </button>
+                </div>
+
+                <div id="cart-items" class="space-y-4 mb-6"></div>
+
+                <div id="cart-empty" class="text-center py-8 hidden">
+                    <div class="text-6xl mb-4">🛒</div>
+                    <p class="text-gray-400">Tu carrito está vacío</p>
+                </div>
+
+                <div id="cart-footer" class="border-t border-gray-700 pt-4 hidden">
+                    <div class="flex justify-between text-lg font-bold mb-4">
+                        <span>TOTAL:</span>
+                        <span id="cart-total" class="text-red-500">$0</span>
+                    </div>
+                    <button onclick="sendWhatsAppOrder()" 
+                        class="w-full btn-primary py-3 rounded-full font-bold flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        ENVIAR PEDIDO
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
